@@ -20,4 +20,4 @@ def client():
     return '<p>Your browser is {}</p>'.format(user_agent)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')
