@@ -1,6 +1,10 @@
-{%extends "bootstrap/base.html"%}
-        {%block title%}Main page{%endblock%}
-        {%block navbar %}
+{% extends "bootstrap/base.html"%}
+{% block styles %}
+{{super()}}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.12.0/css/mdb.min.css" rel="stylesheet">
+{% endblock %}{%block title%} Example {%endblock%}
+
+{%block navbar %}
     <div class="navbar navbar-inverse"
     <div class="container">
         <div class="navbar-header">
@@ -11,18 +15,28 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
+            
             <a class="navbar-brand" href='/'>Main Page</a>
+            
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li><a href="/">Home</a></li>
-                <li><a href="/info">Creator</a></li>
+                <li><a href="/info">Creator</a></li> 
+                <li>
+                  <div class="md-form"><input type="text" id="form1" placeholder="Search" class="form-control mr-sm-2">
+                  </div>
+                </li>
             </ul>
+            
+            </div>
         </div>
+        
     </div>
 </div>
 {%endblock%}
-    {%block content%}
-        <h1>Welcome to my first Flask Web Application</h1>
-        <a href='info'>He is the developer of this website</a>
-    {%endblock%}
+
+{%block content %}
+<h1>Hello from Flask Bootstrap</h1>
+
+{%endblock%}

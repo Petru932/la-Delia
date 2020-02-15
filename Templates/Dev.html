@@ -1,16 +1,33 @@
-<!DOCTYPE html>
-<head>
-    <title>
-    Info
-    </title>
-    <link rel="stylesheet" 
-    href="{{url_for('static', filename= 'bootstrap.css')}}">
-</head>
-<body class="bg-dark text-white">
-    <div class="container">
 
-    <h2>Hi, I'm Greg, the developer of this tiny website</h2>
-    <img src="{{url_for('static', filename= 'user.jpg')}}" height=500px width=700px />
-    <p>Built with Bootstrap,Flask micro-framework and <strong style="color: red;">love</strong></p>
+{%extends "bootstrap/base.html"%}
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+    {%block title%}Info{%endblock%}
+    {%block navbar %}
+    <div class="navbar navbar-inverse"
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle"
+                data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href='/'>Main Page</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="/">Home</a></li>
+                <li><a href="/info">Creator</a></li>
+            </ul>
+        </div>
+    </div>
 </div>
-</body>
+{%endblock%}
+    {%block content%}
+     <h1>Hi, I'm Greg, the developer of this tiny website</h1>
+
+<img src="{{url_for('static', filename= 'user.jpg')}}" class="img-responsive"/>
+
+        <p>Built with Bootstrap,Flask micro-framework and <strong style="color: red;">love</strong></p>
+{%endblock%}
