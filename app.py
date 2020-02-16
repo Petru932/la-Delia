@@ -17,10 +17,22 @@ def developer():
 @app.route('/user/<name>')
 def user(name):
     return render_template("user.html",name=name)
+
 @app.route('/client')
 def client():
     user_agent = request.headers.get('User-Agent')
     return '<p>Your browser is {}</p>'.format(user_agent)
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template('500.html'), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',debug=True)
