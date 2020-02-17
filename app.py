@@ -2,9 +2,10 @@ from flask import Flask
 from flask import request
 from flask import render_template
 from flask_bootstrap import Bootstrap
-
+from form import NameForm
 app = Flask(__name__)
 Bootstrap(app)
+app.config['SECRET_KEY']= 'hard to guess'
 @app.route('/test')
 def test():
     return render_template("test.html") # here I make my tests..
@@ -22,9 +23,14 @@ def user(name):
 def client():
     user_agent = request.headers.get('User-Agent')
     return '<p>Your browser is {}</p>'.format(user_agent)
-@app.route('/contact')
+@app.route('/contact', methods=['GET','POST'])
 def contact():
-    return render_template('contact.html')
+    name = None
+    form = NameForm()
+    if form.validate_on_submit():
+        name = form.name.data
+    form.name.data = ''
+    return render_template('contact.html', form=form, name=name)
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -33,6 +39,7 @@ def page_not_found(e):
 @app.errorhandler(500)
 def internal_server_error(e):
     return render_template('500.html'), 500
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',debug=True)
