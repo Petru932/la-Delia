@@ -1,4 +1,6 @@
-<form method="POST">
+{% extends "base.html" %}
+{% block title %}Contact Us{% endblock %}
+{% block page_content%}
   <div class="form-group">
     <label for="Name">Name</label>
     <input type="text" class="form-control" id="InputName" placeholder="Your name" required>
@@ -16,3 +18,4 @@
   </div>
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+{% endblock %}
