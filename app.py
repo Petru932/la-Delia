@@ -19,9 +19,6 @@ def user(name):
 def client():
     user_agent = request.headers.get('User-Agent')
     return '<p>Your browser is {}</p>'.format(user_agent)
-@app.route('/contact', methods=['GET','POST'])
-def contact():
-    return render_template('contact-future.html')
 
 @app.errorhandler(404)
 def page_not_found(e):

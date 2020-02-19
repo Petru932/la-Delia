@@ -5,7 +5,7 @@ from flask_bootstrap import Bootstrap
 app = Flask(__name__)
 Bootstrap(app)
 
-app.config['MYSQL_HOST']='192.168.1.207'
+app.config['MYSQL_HOST']='localhost'
 app.config['MYSQL_USER']='root'
 app.config['MYSQL_PASSWORD']='codevengers'
 app.config['MYSQL_DB']= 'shop'
@@ -16,19 +16,20 @@ mysql=MySQL(app)
 def index():
     if request.method=="POST":
         details=request.form
-        firstName=details['fname']
-        lastName=details['lname']
+        Name=details['name']
+        Email=details['email']
+        Message=details['msg']
         cur=mysql.connection.cursor()
-        cur.execute("INSERT INTO MyUsers VALUES (%s, %s)", (firstName, lastName))
+        cur.execute("INSERT INTO Messages VALUES (%s, %s, %s)", (Name, Email,Message))
         mysql.connection.commit()
         cur.close()
         return render_template('success.html')
-    return render_template('db.html')
+    return render_template('contact.html')
 
 @app.route('/out')
 def db():
     cur=mysql.connection.cursor()
-    cur.execute("SELECT * FROM MyUsers")
+    cur.execute("SELECT * FROM Messages")
     mysql.connection.commit()
     rows = []
 
