@@ -1,19 +1,31 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template,session,logging
 from flask_bootstrap import Bootstrap
-from flask_mysqldb import MySQL
-import MySQLdb.cursors
-import re
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 Bootstrap(app)
 
-#MySQL Config
-app.secret_key = 'your secret key'
-app.config['MYSQL_HOST']='localhost'
-app.config['MYSQL_USER']='greg'
-app.config['MYSQL_PASSWORD']='root'
-app.config['MYSQL_DB']= 'VM'
+app.config['SQLALCHEMY_DATABASE_URI']='mysql://greg:root@localhost/VM'
 
+db=SQLAlchemy(app)
+# Tabelul MySQL de login
+
+class User(db.Model):
+    __tablename__="Login"
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50))
+    email = db.Column(db.String(50))
+    password = db.Column(db.String(50))
+
+class Msg(db.Model):
+    __tablename__="Messages"
+    id = db.Column(db.Integer, primary_key=True)
+    name=db.Column(db.String(50))
+    email=db.Column(db.String(50))
+    message=db.Column(db.String(255))
+
+    
+        
 
 
 @app.route('/')
@@ -21,7 +33,7 @@ def index():
     return render_template("index.html")
 @app.route('/info')
 def info():
-    return render_template("Dev.html")
+    return render_template("info.html")
 @app.route('/user/<name>')
 def user(name):
     return render_template("user.html",name=name)
@@ -39,33 +51,31 @@ def page_not_found(e):
 def internal_server_error(e):
     return render_template('500.html'), 500
 
-@app.route('/alex')
-def alex():
-    return render_template('alex.html')
 
-mysql=MySQL(app)
-
-@app.route('/login', methods=['GET', 'POST'])
+@app.route("/login",methods=["GET", "POST"])
 def login():
-    if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
-        # Create variables for easy access
-        username = request.form['username']
-        password = request.form['password']
-        # Check if account exists using MySQL
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM Login WHERE username = %s AND password = %s', (username, password))
-        # Fetch one record and return result
-        account = cursor.fetchone()
-        # If account exists in accounts table in out database
-        if account:
-            # Create session data, we can access this data in other routes
-            '''session['loggedin'] = True
-            session['id'] = account['id']
-            session['username'] = account['username']'''
-            return render_template('success.html')
-        else: 
-            return render_template("404.html")
-    return render_template('login.html')
+    if request.method == "POST":
+        uname = request.form["username"]
+        passw = request.form["password"]
+        
+        login = User.query.filter_by(username=uname, password=passw).first()
+        if login is not None:
+            return render_template("success.html")
+    return render_template("login.html")
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        uname = request.form['username']
+        mail = request.form['email']
+        passw = request.form['password']
+
+        register = User(username = uname, email = mail, password = passw)
+        db.session.add(register)
+        db.session.commit()
+
+        return render_template("success.html")
+    return render_template("register.html")
 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
@@ -74,25 +84,22 @@ def contact():
         Name=details['name']
         Email=details['email']
         Message=details['msg']
-        cur=mysql.connection.cursor()
-        cur.execute("INSERT INTO Messages VALUES (%s, %s, %s)", (Name, Email,Message))
-        mysql.connection.commit()
-        cur.close()
+        contact = Msg(name=Name, email=Email, message=Message)
+
+        db.session.add(contact)
+        db.session.commit()
+
         return render_template('success.html')
     return render_template('contact.html')
 
 @app.route('/data')
-def db():
-    cur=mysql.connection.cursor()
-    cur.execute("SELECT * FROM Messages")
-    mysql.connection.commit()
-    rows = []
+def received():
+    data = Msg.query.all()
+    for a in data:
+        print(a.__dict__)
+    return render_template('out.html' ,data = data)
 
-    for row in cur:
-        rows.append(row)
-        print(row)
-    data = cur.fetchall()    
-    return render_template('out.html', data = data)
 
 if __name__ == '__main__':
+    db.create_all()
     app.run(host='0.0.0.0',debug=True)

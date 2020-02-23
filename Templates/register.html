@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Contacteaza-ne{% endblock %}
+{% block title %}Contact Us{% endblock %}
 {% block page_content%}
 <form method="POST" action="">
   <div class="form-group">
@@ -10,6 +10,11 @@
     <label for="Message">Parola</label>
     <input type="password" name="password" class="form-control" id="Password" placeholder="Parola ta" required>
   </div>
-  <button type="submit" class="btn btn-primary">Login</button>
+        <div class="form-group">
+    <label for="InputEmail">Adresa dvs. de email:</label>
+    <input type="email" class="form-control" id="InputEmail"
+           name="email" placeholder="Email-ul dvs." required>
+  </div>
+  <button type="submit" class="btn btn-primary">Inregistrare</button>
 </form>
 {% endblock %}
