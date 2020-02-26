@@ -5,11 +5,11 @@
 rel='stylesheet' type='text/css'>
 
 {%extends "bootstrap/base.html"%}
-
+    {% block html_attribs %} lang="ro"{% endblock %}
         {%block title%}Main page{%endblock%}
         {%block navbar %}
     <div class="navbar navbar-inverse">
-    <div class="container">
+    <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle"
                 data-toggle="collapse" data-target=".navbar-collapse">
@@ -23,6 +23,7 @@ rel='stylesheet' type='text/css'>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
+                
                 <li><a href="/">Acasa</a></li>
                 <li><a href="/info">Info</a></li>
                 <li><a href="/contact">Contacteaza-ne</a></li>
@@ -33,8 +34,14 @@ rel='stylesheet' type='text/css'>
     </div>
 </div>
 {%endblock%}
+
     {%block content%}
+        <div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v6.0"></script>
         <div class="container">
                 {% block page_content %}{% endblock %}
         </div>
+       <footer>
+            <div class="fb-like pull-right" data-href="https://www.facebook.com/programarecurabdare/" data-width="10" data-layout="standard" data-action="like" data-size="large" data-share="true"></div>
+        </footer> 
     {%endblock%}

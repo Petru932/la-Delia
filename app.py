@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 Bootstrap(app)
 
-app.config['SQLALCHEMY_DATABASE_URI']='mysql://greg:root@localhost/VM'
+app.config['SQLALCHEMY_DATABASE_URI']='mysql://greg:codevengers@localhost/shop'
 
 db=SQLAlchemy(app)
 # Tabelul MySQL de login
@@ -24,13 +24,22 @@ class Msg(db.Model):
     email=db.Column(db.String(50))
     message=db.Column(db.String(255))
 
-    
+class Products(db.Model):
+    __tablename__="Products"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    price = db.Column(db.Integer)
+    description = db.Column(db.String(255))
+    photo= db.Column(db.String(50))
         
 
 
 @app.route('/')
 def index():
-    return render_template("index.html")
+    prod = Products.query.all()
+    for d in prod:
+        print(d.__dict__)
+    return render_template("index.html",prod=prod)
 @app.route('/info')
 def info():
     return render_template("info.html")
