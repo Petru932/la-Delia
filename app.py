@@ -5,8 +5,8 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 Bootstrap(app)
 
-app.config['SQLALCHEMY_DATABASE_URI']='mysql://greg:root@localhost/VM'
-
+app.config['SQLALCHEMY_DATABASE_URI']='mysql://greg:codevengers@localhost/shop'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
 db=SQLAlchemy(app)
 # Tabelul MySQL de login
 
@@ -108,6 +108,12 @@ def received():
     data = Msg.query.all()
     
     return render_template('out.html' ,data = data)
+#  TODO:
+'''    
+        1. Security on login (prevents spamming)
+        2. Admin Page
+        3. buy now page
+'''
 
 
 if __name__ == '__main__':
