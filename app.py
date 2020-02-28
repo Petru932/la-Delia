@@ -1,36 +1,15 @@
 from flask import Flask, request, render_template,session,logging
 from flask_bootstrap import Bootstrap
-from flask_sqlalchemy import SQLAlchemy
-
+from db.models import User, Msg, Products, db
 app = Flask(__name__)
-Bootstrap(app)
-
 app.config['SQLALCHEMY_DATABASE_URI']='mysql://greg:codevengers@localhost/shop'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
-db=SQLAlchemy(app)
-# Tabelul MySQL de login
+db.init_app(app)
 
-class User(db.Model):
-    __tablename__="Login"
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50))
-    email = db.Column(db.String(50))
-    password = db.Column(db.String(50))
 
-class Msg(db.Model):
-    __tablename__="Messages"
-    id = db.Column(db.Integer, primary_key=True)
-    name=db.Column(db.String(50))
-    email=db.Column(db.String(50))
-    message=db.Column(db.String(255))
+Bootstrap(app)
 
-class Products(db.Model):
-    __tablename__="Products"
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
-    price = db.Column(db.Float)
-    description = db.Column(db.String(255))
-    photo= db.Column(db.String(50))
+
         
 
 @app.route('/products/<who>')
@@ -109,7 +88,7 @@ def received():
     
     return render_template('out.html' ,data = data)
 #  TODO:
-'''    
+'''  
         1. Security on login (prevents spamming)
         2. Admin Page
         3. buy now page
