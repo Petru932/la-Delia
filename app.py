@@ -10,8 +10,6 @@ db.init_app(app)
 Bootstrap(app)
 
 
-        
-
 @app.route('/products/<who>')
 def shop(who):
     product=Products.query.filter_by(name=who).first()
@@ -66,6 +64,22 @@ def register():
 
         return render_template("success.html")
     return render_template("register.html")
+
+@app.route('/admin/product', methods=['GET', 'POST'])
+def contact():
+    if request.method=="POST":
+        details=request.form
+        Product=details['product']
+        Price=details['price']
+        dscr=details['description']
+        file=details['file']
+        prod = Products(name=Product, price=Price, description=dscr, photo=file)
+
+        db.session.add(prod)
+        db.session.commit()
+
+        return render_template('success.html')
+    return render_template('ins-prod.html')
 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
