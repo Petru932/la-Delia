@@ -28,7 +28,7 @@ class Products(db.Model):
     __tablename__="Products"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
-    price = db.Column(db.Integer)
+    price = db.Column(db.Float)
     description = db.Column(db.String(255))
     photo= db.Column(db.String(50))
         
