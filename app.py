@@ -66,7 +66,7 @@ def register():
     return render_template("register.html")
 
 @app.route('/admin/product', methods=['GET', 'POST'])
-def contact():
+def ins_prod():
     if request.method=="POST":
         details=request.form
         Product=details['product']
