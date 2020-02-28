@@ -2,7 +2,7 @@ from flask import Flask, request, render_template,session,logging
 from flask_bootstrap import Bootstrap
 from db.models import User, Msg, Products, db
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI']='mysql://greg:codevengers@localhost/shop'
+app.config['SQLALCHEMY_DATABASE_URI']='mysql://greg:codevengers@localhost/Shop'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
 db.init_app(app)
 
