@@ -74,7 +74,6 @@ def ins_prod():
         dscr=details['description']
         file=details['file']
         prod = Products(name=Product, price=Price, description=dscr, photo=file)
-
         db.session.add(prod)
         db.session.commit()
 
