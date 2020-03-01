@@ -4,7 +4,8 @@ from db.models import User, Msg, Products, db
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_login import LoginManager, login_required, logout_user, login_user
-
+from flask_security import Security, login_required, SQLAlchemySessionUserDatastore
+from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
 app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
 app.config['SECRET_KEY']= 'a secret key'
@@ -15,9 +16,10 @@ app.config['SECRET_KEY']= 'a secret key'
 admin=input("Numele admin-ului MySQL: ")
 psk=input("Parola ta MySQL: ")
 pos = input("Este Server-ul tau local ? (Da/Nu): ")
-if pos.lower() ==  "nu" or pos.lower()== "no":\
+if pos.lower() ==  "nu" or pos.lower()== "no":
     pos=input("IP-ul Server-ului tau: ")
     key_p = 'mysql://'+ admin+':'+psk+'@'+pos+'/Shop'
+else:
     key_p = 'mysql://'+admin+':'+psk+'@localhost/Shop'
 
 app.config['SQLALCHEMY_DATABASE_URI']=key_p
@@ -28,6 +30,9 @@ db.init_app(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 Bootstrap(app)
+
+
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -78,13 +83,15 @@ def register():
         mail = request.form['email']
         passw = request.form['password']
 
-        register = User(username = uname, email = mail, password = passw)
+        register = User(username = uname, email = mail,password=generate_password_hash(passw) )
         db.session.add(register)
         db.session.commit()
 
         return render_template("success.html")
     return render_template("register.html")
-
+@app.route('/not-finished')
+def trick():
+    return render_template("devs.html")
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method=="POST":
@@ -110,6 +117,8 @@ with app.app_context():
     db.create_all()
 
 admin = Admin(app, name='Admin la Delia', template_mode='bootstrap3')
+
+
 admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(Msg, db.session))
 admin.add_view(ModelView(Products, db.session))
