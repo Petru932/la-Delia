@@ -1,15 +1,15 @@
 {%extends "base.html"%}
-        {%block title%}Floraria La Delia{%endblock%}
+        {%block title%}La Delia{%endblock%}
         {% block styles %}
 {{super()}}
 <link rel="stylesheet"
       href="{{url_for('static', filename='prod.css')}}">
 {% endblock %}
     {%block page_content%}
-        <h1>Bine ati venit la florarie!</h1>
+        <h1>Bine ati venit la Delia!</h1>
         {%for x in prod%}
 
-<div class="col-md-2 column productbox">
+<div class="col-md-4 column productbox">
     <a href="/products/{{x['name']}}">
     <img src="{{url_for('static', filename='products/'+x['photo'])}}" class="img-responsive">
     <div class="producttitle">{{x['name']}}</div>

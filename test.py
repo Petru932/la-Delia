@@ -3,24 +3,31 @@ from flask_bootstrap import Bootstrap
 from db.models import User, Msg, Products, db
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
-from flask_login import LoginManager, login_required, logout_user, login_user
+from flask_login import LoginManager, login_user,login_required
 
 app = Flask(__name__)
+
 app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
 app.config['SECRET_KEY']= 'a secret key'
 
 
 
+try:
+    admin=input("Numele admin-ului MySQL: ")
+    psk=input("Parola ta MySQL: ")
+    pos = input("Este Server-ul tau local ? (Da/Nu): ")
+    if pos.lower() ==  "nu" or pos.lower()== "no":
+        pos=input("IP-ul Server-ului tau: ")
+        key_p = 'mysql://'+ admin+':'+psk+'@'+pos+'/Shop'
+    else:
+        key_p = 'mysql://'+admin+':'+psk+'@localhost/Shop'
 
-admin=input("Numele admin-ului MySQL: ")
-psk=input("Parola ta MySQL: ")
-pos = input("Este Server-ul tau local ? (Da/Nu): ")
-if pos.lower() ==  "nu" or pos.lower()== "no":\
-    pos=input("IP-ul Server-ului tau: ")
-    key_p = 'mysql://'+ admin+':'+psk+'@'+pos+'/Shop'
-    key_p = 'mysql://'+admin+':'+psk+'@localhost/Shop'
+        app.config['SQLALCHEMY_DATABASE_URI']=key_p
+except:
+    pass # Acest Except nu functioneaza momentan
 
-app.config['SQLALCHEMY_DATABASE_URI']=key_p
+
+
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
 db.init_app(app)
@@ -28,13 +35,19 @@ db.init_app(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 Bootstrap(app)
-
 @login_manager.user_loader
 def load_user(user_id):
+    return User.get(user_id)
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect('/')
 
-    return User.query.get(user_id)
-
-
+@app.route("/secret")
+@login_required
+def secret():
+    return "Only authenticated users allowed!"
 @app.route('/products/<who>')
 def shop(who):
     product=Products.query.filter_by(name=who).first()
@@ -51,7 +64,10 @@ def index():
 def info():
     return render_template("info.html")
 
-
+@app.route('/client')
+def client():
+    user_agent = request.headers.get('User-Agent')
+    return '<p>Your browser is {}</p>'.format(user_agent)
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -63,14 +79,18 @@ def internal_server_error(e):
 
 
 
-@app.route('/login',methods=["GET", "POST"])
+@app.route("/login",methods=["GET", "POST"])
 def login():
-    if request.method=="POST":
+    if request.method == "POST":
         uname = request.form["username"]
         passw = request.form["password"]
-        usr = User.query.filter_by(username=uname, password=passw).first()
-        login_user(usr)
+        
+        login = User.query.filter_by(username=uname, password=passw).first()
+        if login is not None:
+            return render_template("success.html")
     return render_template("login.html")
+
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -84,6 +104,8 @@ def register():
 
         return render_template("success.html")
     return render_template("register.html")
+
+
 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
@@ -100,19 +122,26 @@ def contact():
         return render_template('success.html')
     return render_template('contact.html')
 
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return render_template("success.html")
-
+@app.route('/pareri')
+def received():
+    data = Msg.query.all()
+    
+    return render_template('out.html' ,data = data)
+#  TODO:
+'''  
+        1. Security on login (prevents spamming)
+        2. Admin Page
+        3. buy now page
+'''
 with app.app_context():
     db.create_all()
-
-admin = Admin(app, name='Admin la Delia', template_mode='bootstrap3')
+admin = Admin(app, name='microblog', template_mode='bootstrap3')
 admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(Msg, db.session))
 admin.add_view(ModelView(Products, db.session))
+
+
+
 
 
 if __name__ == '__main__':
