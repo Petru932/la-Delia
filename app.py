@@ -4,7 +4,6 @@ from db.models import User, Msg, Products, db
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_login import LoginManager, login_required, logout_user, login_user
-from flask_security import Security, login_required, SQLAlchemySessionUserDatastore
 from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
 app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
