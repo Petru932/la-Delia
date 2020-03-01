@@ -3,7 +3,7 @@
 2. Cloneaza Repo-ul nostru de pe website sau cu comanda `git clone htps://github.com/GabyTrifan/la-Delia`;
 3. Creaza un mediu virtual Python (venv) cu comanda `python -m venv nume_folder `;
 4. Activeaza mediul virtual cu comanda `source nume_folder/bin/activate `(pentru Linux),
-pentru alte sisteme de operare accesati (acest link)[https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/ ];
+pentru alte sisteme de operare accesati [acest link](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/ );
 5. Acceseaza folder-ul clonat cu git din terminal; 
 6. Creaza o baza de date de tip MySQL si configureaza user-ul;
 7. Ruleaza comanda `pip install -r requirements.txt` pentru a putea instala framework-urile si librariile necesare;
